@@ -4,14 +4,16 @@ import Input from "@/Utils/Input";
 import Head from "next/head";
 import PasswordInput from "@/Utils/PasswordInput";
 import Button from "@/Utils/Button";
-import Link from "next/link";
-export const LoginForm = () => {
+import {useRouter} from "next/navigation";
+export const ForgetPassword= () => {
+    const router = useRouter()
   const [user, setUser]=useState({
     email:"",
-    password:""
+    // password:""
   })
-  const handleSubmit=()=>{
-    console.log(user)
+  const handleBack=()=>{
+    // console.log(user)
+     router.push("/")
   }
   // const [email, setEmail] = useState("");
   // const [password, setPasword] = useState("");
@@ -19,7 +21,7 @@ export const LoginForm = () => {
     <div className=" h-screen w-screen grid place-items-center ">
       <div className="max-h-[300px] w-[300px] md:w-[400px]  bg-white shadow-2xl rounded-lg py-">
         <div className="w-full text-center mx-auto my-1">
-          <span className="font-bold text-2xl">Login</span>
+          <span className="font-bold text-2xl">Forget Password</span>
         </div>
         <div className="flex flex-col justify-between">
           <div className="my-2 mx-auto w-[95%]">
@@ -37,21 +39,14 @@ export const LoginForm = () => {
               label={"Email"}
             />
           </div>
-          <div className="my-2 mx-auto w-[95%] flex flex-col">
-            <PasswordInput label={"Password"} value={user.password} onChange={(e)=>setUser({...user, password:e.target.value})}/>
-              <span className="text-end text-sm pt-1">
-                <Link href={"/forgetpassword"}>
-                  Forgot Password?
-                </Link>
-              </span>
-          </div>
+        
           <div className="my-3 flex justify-center mx-3">
-            <Button onclick={handleSubmit} label={"Login"}/>
+            <Button  label={"Reset Password"}/>
           </div>
-          <span className="flex  items-center justify-center gap-2 mb-3">Don't have an account? 
-            <Link href={"/register"}>
-              <span className="font-semibold"> Sign up!</span>
-            </Link>
+          <span className="flex  items-center justify-center gap-2 mb-3">
+            <button onClick={handleBack}>
+              <span className="font-semibold"> Go Back</span>
+            </button>
           </span>
         </div>
       </div>
