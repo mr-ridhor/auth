@@ -7,13 +7,70 @@ import Link from "next/link";
 import React, { useState } from "react";
 
 const RegisterForm = () => {
-  const user = useState({
+  const [user, setUser] = useState({
     email: "",
-    password: " ",
+    name: "",
+    password: "",
+    username: "",
+    confirmPassword: "",
+   dob:"",
   });
   const [selectDate, setSelectDate] = useState("");
   const [selectMonth, setSelectMonth] = useState("");
   const [selectYear, setSelectYear] = useState("");
+  const [error, setError] = useState("");
+  const handleDateChange = (formattedDate) => {
+    setUser({ ...user, date: formattedDate });
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent the default form submission behavior
+
+    if (!user.name || !user.password || !user.email || !user.username) {
+      setError("All fields are required.");
+      return;
+    }
+
+    if (user.password !== user.confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+    
+
+    try {
+      const res = await fetch("api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: user.name,
+          email: user.email,
+          password: user.password,
+          username: user.username,
+          dob:`${selectYear}-${selectMonth.toString().padStart(2, '0')}-${selectDate.toString().padStart(2, '0')}`,
+          confirmPassword: user.confirmPassword,
+        }),
+      });
+      if (res.ok) {
+        // Reset the form and state
+        const form = e.target;
+        form.reset();
+        setUser({
+          email: "",
+          name: "",
+          password: "",
+          username: "",
+          confirmPassword: "",
+          dob: "",
+        });
+        setError("");
+      } else {
+        console.log("Reg failed");
+      }
+    } catch (error) {
+      console.log("Error occurred:", error);
+    }
+  };
   return (
     <div>
       <div className=" h-screen w-screen grid place-items-center ">
@@ -25,11 +82,8 @@ const RegisterForm = () => {
             <div className="my-2 mx-auto w-[95%]">
               <Input
                 type={"text"}
-                value={user.email}
-                Onchange={(e) => {
-                  e.target.value;
-                  console.log(e.target.value);
-                }}
+                value={user.name}
+                onchange={(e) => setUser({ ...user, name: e.target.value })}
                 placeholder={"Please enter your name"}
                 label={"Name"}
               />
@@ -38,10 +92,7 @@ const RegisterForm = () => {
               <Input
                 type={"email"}
                 value={user.email}
-                Onchange={(e) => {
-                  e.target.value;
-                  console.log(e.target.value);
-                }}
+                onchange={(e) => setUser({ ...user, email: e.target.value })}
                 placeholder={"Please enter your mail"}
                 label={"Email"}
               />
@@ -49,41 +100,43 @@ const RegisterForm = () => {
             <div className="my-2 mx-auto w-[95%]">
               <Input
                 type={"text"}
-                value={user.email}
-                Onchange={(e) => {
-                  e.target.value;
-                  console.log(e.target.value);
-                }}
+                value={user.username}
+                onchange={(e) => setUser({ ...user, username: e.target.value })}
                 placeholder={""}
                 label={"Username"}
               />
             </div>
             <div className="my-2 mx-auto w-[95%]">
-              <DateComponent selectDate={selectDate} setSelectDate={setSelectDate} selectMonth={selectMonth}setSelectMonth={setSelectMonth} selectYear={selectYear}setSelectYear={setSelectYear}/>
-              </div>
+              <DateComponent
+                selectDate={selectDate}
+                setSelectDate={setSelectDate}
+                selectMonth={selectMonth}
+                setSelectMonth={setSelectMonth}
+                selectYear={selectYear}
+                setSelectYear={setSelectYear}
+                onDateChange={handleDateChange}
+              />
+            </div>
 
             <div className="my-2 mx-auto w-[95%] flex flex-col">
               <PasswordInput
                 label={"Password"}
                 value={user.password}
-                onChange={(e) => {
-                  console.log(e.target.value);
-                  e.target.value;
-                }}
+                onchange={(e) => setUser({ ...user, password: e.target.value })}
               />
             </div>
             <div className="my-2 mx-auto w-[95%] flex flex-col">
               <PasswordInput
                 label={"Confirm Password"}
-                value={user.password}
-                onChange={(e) => {
-                  console.log(e.target.value);
-                  e.target.value;
-                }}
+                value={user.confirmPassword}
+                onchange={(e) =>
+                  setUser({ ...user, confirmPassword: e.target.value })
+                }
               />
             </div>
+            {error && <div className="text-red-500 mt mx-4">{error}</div>}
             <div className="my-3 flex justify-center mx-3">
-              <Button onclick={""} label={"Register"} />
+              <Button onclick={handleSubmit} label={"Register"} />
             </div>
             <span className="flex  items-center justify-center gap-2 mb-3">
               Already have an account?

@@ -1,6 +1,6 @@
 import React from 'react'
 
-const DateComponent = ({selectDate,setSelectDate, selectMonth,setSelectMonth,selectYear,setSelectYear}) => {
+const DateComponent = ({selectDate,setSelectDate, selectMonth,setSelectMonth,selectYear,setSelectYear,  onDateChange}) => {
     const date=[];
     for(let i=1; i <= 31; i++){
         date.push(
@@ -30,13 +30,22 @@ const DateComponent = ({selectDate,setSelectDate, selectMonth,setSelectMonth,sel
     }
    const handleDate=(e)=>{
     setSelectDate(e.target.value)
+    handleDateChange();
    }
    const handleMonth=(e)=>{
     setSelectMonth(e.target.value)
+    handleDateChange();
    }
    const handleYear=(e)=>{
     setSelectYear(e.target.value)
+    handleDateChange();
    }
+   const handleDateChange = () => {
+    if (selectDate && selectMonth && selectYear) {
+      const formattedDate = `${selectYear}-${selectMonth.toString().padStart(2, '0')}-${selectDate.toString().padStart(2, '0')}`;
+      onDateChange(formattedDate);
+    }
+  };
   return (
     <div className="w-full flex justify-between gap-2">
         <select value={selectDate} onChange={handleDate}
