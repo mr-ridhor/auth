@@ -48,7 +48,7 @@ const RegisterForm = () => {
           password: user.password,
           username: user.username,
           dob:`${selectYear}-${selectMonth.toString().padStart(2, '0')}-${selectDate.toString().padStart(2, '0')}`,
-          confirmPassword: user.confirmPassword,
+         
         }),
       });
       if (res.ok) {

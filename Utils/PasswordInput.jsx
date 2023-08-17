@@ -9,7 +9,7 @@ const PasswordInput = ({  onchange, value, label }) => {
       <div className="w-full relative ">
         <input
           placeholder=" "
-          onChange={onchange} 
+          onChange={onchange}
           type={type}
           value={value}
           className="peer w-full pt-4 mt-1 outline-none transition disabled:opacity-70 disabled:cursor-not-allowed pl-2 focus:outline-none text-gray-800"
